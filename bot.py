@@ -2,7 +2,7 @@ import os
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import google.generativeai as genai
+from google import genai
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -13,8 +13,8 @@ logger = logging.getLogger("kani_kurd_bot")
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-2.0-flash-exp')
+# API جدید گوگل
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 SYSTEM_PROMPT = """تو کانی کورد هستی، یک دستیار هوشمند کوردی و فارسی‌زبان.
 - اگه کاربر کوردی سورانی نوشت، به کوردی سورانی جواب بده
@@ -33,9 +33,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
     try:
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(
-            f"{SYSTEM_PROMPT}\n\nکاربر: {user_message}"
+        # روش جدید API
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=f"{SYSTEM_PROMPT}\n\nکاربر: {user_message}"
         )
         await update.message.reply_text(response.text)
     except Exception as e:
