@@ -8,7 +8,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
-logger = logging.getLogger(name)
+logger = logging.getLogger("kani_kurd_bot")
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
@@ -25,7 +25,7 @@ SYSTEM_PROMPT = """تو کانی کورد هستی، یک دستیار هوشم�
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "سڵاو! من کانی کورد‌ام 🤖\n"
+        "سڵاو! من کانی کورد‌ام\n"
         "یک دستیار هوشمند کوردی و فارسی‌زبان.\n"
         "هر سؤالی داری بپرس، جواب میدم!"
     )
@@ -40,7 +40,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(response.text)
     except Exception as e:
         logger.error(f"Error: {e}")
-        await update.message.reply_text("ببخشید، یه مشکلی پیش اومد. دوباره امتحان کن 🙏")
+        await update.message.reply_text("ببخشید، یه مشکلی پیش اومد. دوباره امتحان کن")
 
 def main():
     app = Application.builder().token(TELEGRAM_TOKEN).build()
